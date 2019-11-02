@@ -5,7 +5,34 @@ Complete the proof of correctness of the determinization construction.
 Let `N` be a NFA and `D` be a DFA obtained from `N` using the powerset construction.
 Show that any word accepted by `D` is also accepted by `N`: `w ∈ L(D) ⇒ w ∈ L(N)`.
 
-## Solution
+### Solution :
+
+If $D = (Q_D, Σ, δ_D, \lbrace q_0 \rbrace, F_D)$ is the DFA constructed from NFA $N = (Q_N, Σ, δ_N, q_0, F_N)$ by the `subset construction / powerset construction` _( Method for converting a nondeterministic finite automaton (NFA) into a deterministic finite automaton (DFA))_. 
+
+Then $w ∈ L(D) ⇒ w ∈ L(N)$
+
+#### Proof :
+- By Induction on $|w|$ is that, $\hat{\delta}_D(\lbrace q_0 \rbrace,w) = \hat{\delta}_N(q_0,w)$
+
+  Notice that each of $\hat{\delta}$ functions returns a set of states from $Q_N$, but the $\hat{\delta}_D$ inteprets as one set of the states of $Q_D$ (which is the powerset of $Q_N$). While, $\hat{\delta}_N$ inteprets this as a subset of $Q_N$.
+
+- Let $|w| = 0$; that is, $w= \epsilon$. 
+
+  By the basis definition of $\hat{\delta}$ for DFA and NFA, both $\hat{\delta}_D(\lbrace q_0 \rbrace,w)$ and $\hat{\delta}_N(q_0,w)$ are $\lbrace q_0 \rbrace$
+
+- Let $w$ be of length $n+1$, and assume that the statement for length $n$. Break $w$ up as $w=xa$, where $a$ is the final symbol of $w$. By using the inductive hypothesis, $\hat{\delta}_D(\lbrace q_0 \rbrace,x) = \hat{\delta}_N(q_0,x)$. Let both of these sets of N's states be $\lbrace p_1,p_2,p_3,...,p_k \rbrace$.
+
+  - The inductive part of the definition of $\hat{\delta}_D$ for NFA's tell us: $\hat{\delta}_N(q_0, w) = \bigcup _{i=1}^k \delta_N(p_i, a)$  $...(1.1)$
+
+  - The subset construction, on the other hand tells us that: $\hat{\delta}_D(\lbrace p_1,p_2,p_3,...,p_k \rbrace, a) = \bigcup _{i=1}^k \delta_N(p_i, a)$ $...(1.2)$
+
+  - Now, let us use $(1.2)$ and the fact that $\hat{\delta}_D(\lbrace q_0 \rbrace,x) = \lbrace p_1,p_2,p_3,...,p_k \rbrace$ in the inductive part of the definition of $\hat{\delta}_D$ for for DFA's:
+
+    $\hat{\delta}_D(\lbrace q_0 \rbrace,w) = \delta_D ( \hat{\delta}_D(\lbrace q_0 \rbrace,x),a) = \delta_D( \lbrace p_1,p_2,p_3,...,p_k \rbrace ,a) = \bigcup _{i=1}^k \delta_N(p_i, a)$ $...(1.3)$
+  
+- Thus, Equations $(1.1)$ and $(1.3)$ demonstrate that $\hat{\delta}_D(\lbrace q_0 \rbrace,w) = \hat{\delta}_N(q_0,w)$. 
+
+- When we observe that D and N both accept $w$ if and only if $\hat{\delta}_D(\lbrace q_0 \rbrace,w)$ or $\hat{\delta}_N(q_0,w)$, respectively, contains a state in $F_N$, we have complete proof that $L(D) = L(N)$
 
 
 
@@ -59,7 +86,7 @@ Instantiate your example with 3 `increase` program and a semaphore with `n=2`.
 You are allowed to change the automata (states, alphabet, transition, etc.).
 If this is possible, suggest an alternate model where this is possible.
 
-## Solution
+### Solution
 
 
 __Task 2.__
@@ -70,7 +97,7 @@ The lock must be `unlock`ed the same number of times it was `lock`ed before a ne
 You are allowed to change the automata (states, alphabet, transition, etc.).
 If this is possible, suggest an alternate model where this is possible.
 
-## Solution
+### Solution
 
 
 
@@ -87,7 +114,7 @@ Let us further assume that the automaton are DFAs.
 * Prove your bound
 * What happens when there are many copies of the program (e.g. concurrency)? _hint._ this is one of the reason testing concurrent programs is hard.
 
-## Solution
+### Solution
 
 
 
@@ -98,4 +125,4 @@ Show that there is a regular language `L` over a unary alphabet ($\Sigma = \\{ a
 i.e. there is no DFA with a single final state whose language `L`.
 Prove your claim.
 
-## Solution
+### Solution
