@@ -199,3 +199,7 @@ i.e. there is no DFA with a single final state whose language `L`.
 Prove your claim.
 
 ### Solution
+A deterministic finite-state automaton have 5-tuple $(Q, Σ, δ, q_0, F)$. Where the set of accepting (or final) states $F$ show that $F \subseteq Q$. So $F$ can be any set of states that taken from $Q$ including $\emptyset$.
+
+Thus, If there is a regular languange `L` over a unary alphabet which is not recognizable with the model, it's not a final states. There is no DFA with a single final state whose language `L`
+
