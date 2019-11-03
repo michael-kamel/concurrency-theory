@@ -1,3 +1,10 @@
+# Group 
+- Vikram Jan
+- Ahmad Mustafid
+
+
+# Excercise 1 (Solution)
+
 ## 1. Correctness of the Determinization Construction
 
 Complete the proof of correctness of the determinization construction.
@@ -33,6 +40,9 @@ Then $w ∈ L(D) ⇒ w ∈ L(N)$
 - Thus, Equations $(1.1)$ and $(1.3)$ demonstrate that $\hat{\delta}_D(\lbrace q_0 \rbrace,w) = \hat{\delta}_N(q_0,w)$. 
 
 - When we observe that D and N both accept $w$ if and only if $\hat{\delta}_D(\lbrace q_0 \rbrace,w)$ or $\hat{\delta}_N(q_0,w)$, respectively, contains a state in $F_N$, we have complete proof that $L(D) = L(N)$
+
+
+
 
 
 
@@ -74,7 +84,7 @@ digraph finite_state_machine {
 }
 ```
 
-__Tasks 1.__
+## Tasks 2.1
 Generalize this example to use a `semaphore` instead of a lock.
 A semaphore generalize a lock with counting.
 The equivalent of `lock` is `acquire` and `release` instead of `unlock`.
@@ -88,8 +98,35 @@ If this is possible, suggest an alternate model where this is possible.
 
 ### Solution
 
+A semaphore is based on an internal counter which is `increment` each time _acquire()_ is called and `decremented` each time _release()_ is called. The constructor takes a value which is the counter initial value. This value defaults to 1. A condition instance `0` (try and wait) is created with a lock to protect the counter.
 
-__Task 2.__
+The semaphore with `n=2`:
+
+
+```graphviz
+digraph finite_state_machine {
+    rankdir=LR;
+    node [shape = circle];
+    init [shape = none, label = ""];
+    A [ label = "0" ];
+    B [shape = doublecircle];
+    B [ label = "1" ];
+    C [ label = "2" ];
+    D [ label = "3" ];
+    init -> A;
+    A -> B [ label = "try" ]
+    B -> A [ label = "wait" ]
+    B -> C [ label = "acquire (increment n++)" ];
+    C -> D [ label = "acquire (increment n++)" ];
+    D -> C [ label = "release (decrement n--)" ];
+    C -> B [ label = "release (decrement n--)" ];
+}
+```
+
+
+
+
+## Task 2.2
 Generalize this example to make the lock _reentrant_.
 A reentrant lock allows one thread to `lock` the same lock multiple times.
 The lock must be `unlock`ed the same number of times it was `lock`ed before a new process can acquire it.
@@ -97,7 +134,10 @@ The lock must be `unlock`ed the same number of times it was `lock`ed before a ne
 You are allowed to change the automata (states, alphabet, transition, etc.).
 If this is possible, suggest an alternate model where this is possible.
 
-### Solution
+### Solution (more)
+To create a `lock reentrant`, we should use a push down automata.
+
+Same as the diagraph above, we need to modify the alphabet to distinguish between processes (0 for lock and unlock; 123 for the process). The process has already had the lock can lock the process again. The states that can enter on the process will be stacked and if the stack is full the process will be locked. So, a new process that tries to enter the process will wait until the stack has release at least one process.
 
 
 
@@ -115,6 +155,38 @@ Let us further assume that the automaton are DFAs.
 * What happens when there are many copies of the program (e.g. concurrency)? _hint._ this is one of the reason testing concurrent programs is hard.
 
 ### Solution
+
+In this case we use a DFA as the Automaton
+
+- The longest / worst case, of the Shortest Counterexample to a Safety Property has $m$ states and $n$ properties. So the size of the DFA is $m * n - 1$.
+
+- For an alphabet with a single letter $Σ = \{ a \}$. We can count modulo $n$ by using the DFA with $n$ states. For example, a DFA that accepts the word of size $w$ where $(|w| \mod 4) = 3$:
+
+``` graphviz
+digraph finite_state_machine {
+    rankdir=LR;
+    node [shape = circle];
+    init [shape = none, label = ""];
+    D [shape = doublecircle];
+    init -> A;
+    A -> B [ label = "1" ];
+    B -> C [ label = "1" ];
+    C -> D [ label = "1" ];
+    D -> A [ label = "1" ];
+}
+```
+
+- Let products from two automatons build the same way $(|w| \mod m) = m-1$ and $(|w| \mod n) = n-1$. The size for first accepted word has $m * n - 1$.
+
+- The examples provided above shows that the bound is at least have $m * n - 1$. We want to prove by:
+
+  - The short words accepted by the automation will not visit a state twice.
+
+  - In the graph the path of size $s$ visit $s+1$ nodes. By the two prove this, we have a word of size $m * n - 1$ visit at most $m * n$ different states. The word that longer than that will visit one state twice or more, therefore, it cannot be the shortest accepted word.
+
+- Thus, the product of this is an exponential number of automaton.
+  
+  If we have programs run in parallel, it will explore exponentially longer executions to find bugs. This problem is known as `the state-space explosion problem` and test the Concurrent Programs (in the worst case) is hard to do.
 
 
 
