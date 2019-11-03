@@ -1,6 +1,7 @@
 # Group 
 - Vikram Jan
 - Ahmad Mustafid
+- Michael Youssef
 
 
 # Excercise 1 (Solution)
